@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สั่งซื้อสำเร็จ | XtraSmooth</title>
+    <link rel="stylesheet" href="assets/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar"><div class="container"><a href="/" class="logo">xtrasmooth</a></div></nav>
+    
+    <div class="container" style="text-align:center; padding:60px 20px;">
+        <div style="font-size: 64px; margin-bottom: 20px;">🎉</div>
+        <h1>ขอบคุณที่ไว้วางใจ XtraSmooth!</h1>
+        <p>คำสั่งซื้อของคุณได้รับการยืนยันเรียบร้อยแล้ว</p>
+        
+        <div id="summary-box" class="card" style="max-width:500px; margin:40px auto; text-align:left;">
+            <h3 style="margin-top:0; border-bottom:1px solid var(--border); padding-bottom:10px;">รายละเอียดคำสั่งซื้อ</h3>
+            <div id="order-details-content">
+                <!-- Loaded by JS -->
+            </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:12px; max-width:500px; margin:0 auto;">
+            <button onclick="sendToLine()" class="btn-primary" style="background:#06c755;">ส่งรายละเอียดแจ้งโอนไป LINE</button>
+            <a href="/" class="btn-outline">กลับไปหน้าแรก</a>
+        </div>
+    </div>
+
+    <script src="assets/app.js"></script>
+    <script>
+        const order = JSON.parse(localStorage.getItem('last_order'));
+        if (order) {
+            document.getElementById('order-details-content').innerHTML = `
+                <p><b>เลขออเดอร์:</b> ${order.orderId}</p>
+                <p><b>สินค้า:</b> XtraSmooth 1 ลิตร x ${order.qty}</p>
+                <p><b>ยอดรวม:</b> ฿${order.total.toLocaleString()}</p>
+                <p><b>ผู้รับ:</b> ${order.name}</p>
+                <p><b>วิธีชำระ:</b> ${order.paymentMethod === 'transfer' ? 'โอนเงิน' : order.paymentMethod === 'cod' ? 'เก็บเงินปลายทาง' : 'อื่นๆ'}</p>
+            `;
+        } else {
+            window.location.href = '/';
+        }
+
+        function sendToLine() {
+            const text = `ยืนยันออเดอร์: ${order.orderId}\nจำนวน: ${order.qty} ขวด\nยอดรวม: ${order.total} บาท\nชื่อผู้รับ: ${order.name}\nเบอร์โทร: ${order.phone}\nที่อยู่: ${order.address}`;
+            window.open(`https://lin.ee/jWmtvPJ?text=${encodeURIComponent(text)}`, '_blank');
+        }
+    </script>
+</body>
+</html>
